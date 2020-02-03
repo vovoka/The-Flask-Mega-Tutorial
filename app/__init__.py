@@ -1,21 +1,26 @@
 from flask import Flask
-from config import Config
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 from flask_login import LoginManager
-from app import routes, models, errors
+from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
+
+from config import Config
+# Create app & configure it
+app = Flask(__name__)
+app.config.from_object(Config)
+
+#  Logging
 import logging
 from logging.handlers import SMTPHandler
 from logging.handlers import RotatingFileHandler
 import os
 
-app = Flask(__name__)
-app.config.from_object(Config)
+# Plugins
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 login = LoginManager(app)
 login.login_view = 'login'
 
+from app import routes, models, errors
 
 if not app.debug:
     # Logging to an email
